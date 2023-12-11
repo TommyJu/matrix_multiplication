@@ -71,10 +71,11 @@ def first_matrix_input() -> list:
         row_number += 1
 
 
-def second_matrix_input(first_matrix: list) -> list:
+def second_matrix_input(first_matrix_column_count: int) -> list:
     """
     Retrieve the second valid matrix from the user
 
+    :param first_matrix_column_count: an integer representing the number of columns of the first matrix
     :precondition: a matrix must be non-empty
     :precondition: a matrix must not have any missing values
     :precondition: the number of rows of the second matrix must equal the number of columns of the first
@@ -82,8 +83,41 @@ def second_matrix_input(first_matrix: list) -> list:
 
     :return: a list representing the matrix
     """
-    pass
+    matrix = []
+    row_number = 1
+    number_of_columns = None
+    while True:
+        print("Second Matrix:")
+        print(create_matrix_table(matrix))
+        row_input = input(f"Input the value(s) of row {row_number} for the second matrix.\n")
 
+        row_input.strip()
+        row_values = row_input.split(" ")
+
+        # Convert each row value from string to integer
+        try:
+            for column, value in enumerate(row_values):
+                int(row_values[column])
+        except ValueError:
+            print(f"You must enter an integer for each row value.\n")
+            continue
+
+        # Use the first valid input to determine the number of columns the matrix has
+        if not matrix:
+            number_of_columns = len(row_values)
+
+        # Ensure that there are no missing column entries for each row on valid input
+        if len(row_values) != number_of_columns:
+            print(f"You must enter a row with {number_of_columns} columns.\n")
+            continue
+
+        matrix.append(row_values)
+
+        # This condition must be true for us to correctly multiply 2 matrices
+        if row_number == first_matrix_column_count:
+            return matrix
+
+        row_number += 1
 
 def create_matrix_table(matrix: list):
     """
@@ -105,7 +139,8 @@ def create_matrix_table(matrix: list):
 def main():
     sample_matrix = [[1, 2], [3, 4]]
     sample_table = create_matrix_table(sample_matrix)
-    print(first_matrix_input())
+    # print(first_matrix_input())
+    print(second_matrix_input(3))
 
 
 if __name__ == "__main__":
