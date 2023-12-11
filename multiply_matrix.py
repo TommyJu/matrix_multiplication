@@ -80,7 +80,7 @@ def first_matrix_input() -> list:
     :return: a list representing the matrix
     """
     matrix = []
-    row_number = 1
+    row_number = 0
     number_of_columns = None
     while True:
         print("First Matrix:")
@@ -100,10 +100,10 @@ def first_matrix_input() -> list:
 
         # Convert each row value from string to integer
         try:
-            for column, value in enumerate(row_values):
-                int(row_values[column])
+            for count, _ in enumerate(row_values):
+                row_values[count] = int(row_values[count])
         except ValueError:
-            print(f"You must enter an integer for each row value or type 'next'.\n")
+            print(f"You must enter an integer for each row value.\n")
             continue
 
         # Use the first valid input to determine the number of columns the matrix has
@@ -132,17 +132,23 @@ def second_matrix_input(first_matrix_column_count: int) -> list:
     :return: a list representing the matrix
     """
     matrix = []
-    row_number = 1
+    row_number = 0
     number_of_columns = None
+
     while True:
         print("Second Matrix:")
         print(create_matrix_table(matrix))
+
+        # This condition must be true for us to correctly multiply 2 matrices
+        if row_number == first_matrix_column_count:
+            return matrix
+
         row_values = input(f"Input the value(s) of row {row_number} for the second matrix.\n").strip().split(" ")
 
         # Convert each row value from string to integer
         try:
-            for column, value in enumerate(row_values):
-                int(row_values[column])
+            for count, _ in enumerate(row_values):
+                row_values[count] = int(row_values[count])
         except ValueError:
             print(f"You must enter an integer for each row value.\n")
             continue
@@ -156,13 +162,8 @@ def second_matrix_input(first_matrix_column_count: int) -> list:
             print(f"You must enter a row with {number_of_columns} columns.\n")
             continue
 
-        matrix.append(row_values)
-
-        # This condition must be true for us to correctly multiply 2 matrices
-        if row_number == first_matrix_column_count:
-            return matrix
-
         row_number += 1
+        matrix.append(row_values)
 
 
 def create_matrix_table(matrix: list):
@@ -183,10 +184,16 @@ def create_matrix_table(matrix: list):
 
 
 def main():
-    sample_matrix = [[1, 2], [3, 4]]
-    sample_table = create_matrix_table(sample_matrix)
-    # print(first_matrix_input())
-    print(multiply_matrix([[1, 2, 3], [4, 5, 6]], [[1], [1], [2]]))
+    first_matrix = first_matrix_input()
+    first_matrix_column_count = len(first_matrix[0])
+    second_matrix = second_matrix_input(first_matrix_column_count)
+    result_matrix = multiply_matrix(first_matrix, second_matrix)
+    print("First Matrix:")
+    print(create_matrix_table(first_matrix))
+    print("Second Matrix:")
+    print(create_matrix_table(second_matrix))
+    print("Result Matrix:")
+    print(create_matrix_table(result_matrix))
 
 
 if __name__ == "__main__":
